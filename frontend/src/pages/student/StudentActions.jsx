@@ -2,13 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import PaymentModal from '../../components/common/PaymentModal';
 import { initiatePayment } from '../../api/student';
+import { fetchHostels } from '../../api/booking';
 import { toast } from 'react-toastify';
 
 const ActionButton = ({ label, disabled, color, onClick }) => (
     <button
         onClick={onClick}
         disabled={disabled}
-        className={`w-full py-2 rounded text-white font-medium
+        className={`w-full py-2 rounded text-white font-medium cursor-pointer
       ${disabled ? "bg-gray-400" : color}`}
     >
         {label}
@@ -22,6 +23,7 @@ const StudentActions = ({ data }) => {
         data.payment.status === "PAID";
 
     const [payOpen, setPayOpen] = useState(false);
+    const [hostels, setHostels] = useState([]);
 
     const handleInitiate = async (payload) => {
         try {
@@ -33,6 +35,16 @@ const StudentActions = ({ data }) => {
         } catch (err) {
             console.error(err);
             toast.error(err?.response?.data?.message || 'Payment initiation failed');
+        }
+    };
+
+    const loadHostels = async () => {
+        try {
+            // fetch hostels for student's gender if available
+            const res = await fetchHostels();
+            setHostels(res.data || []);
+        } catch (err) {
+            console.error('Failed to load hostels for payment', err);
         }
     };
 
@@ -59,7 +71,7 @@ const StudentActions = ({ data }) => {
                     label={data.payment?.status === 'PAID' ? 'Paid' : 'Make Payment'}
                     disabled={data.payment?.status === 'PAID'}
                     color="bg-indigo-600 hover:bg-indigo-700"
-                    onClick={() => setPayOpen(true)}
+                    onClick={() => { setPayOpen(true); loadHostels(); }}
                 />
                 <ActionButton
                     label="Vacate Room"
@@ -72,6 +84,7 @@ const StudentActions = ({ data }) => {
             </div>
             <PaymentModal
                 isOpen={payOpen}
+                hostels={hostels}
                 onCancel={() => setPayOpen(false)}
                 onSubmit={handleInitiate}
             />

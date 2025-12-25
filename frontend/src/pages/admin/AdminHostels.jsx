@@ -13,7 +13,7 @@ const AdminHostels = () => {
     const [loading, setLoading] = useState(true);
 
     const [editing, setEditing] = useState(null);
-    const [form, setForm] = useState({ name: "", gender: "Male", totalRooms: 0 });
+    const [form, setForm] = useState({ name: "", gender: "Male", totalRooms: "", feeAmount: "" });
 
     const load = async () => {
         setLoading(true);
@@ -33,12 +33,12 @@ const AdminHostels = () => {
 
     const startEdit = (h) => {
         setEditing(h.id);
-        setForm({ name: h.name, gender: h.gender, totalRooms: h.totalRooms || 0 });
+        setForm({ name: h.name, gender: h.gender, totalRooms: h.totalRooms || 0, feeAmount: h.feeAmount ?? 0 });
     };
 
     const resetForm = () => {
         setEditing(null);
-        setForm({ name: "", gender: "Male", totalRooms: 0 });
+        setForm({ name: "", gender: "Male", totalRooms: "", feeAmount: "" });
     };
 
     const submit = async (e) => {
@@ -81,15 +81,15 @@ const AdminHostels = () => {
     if (loading) return <div className="p-4">Loading hostels...</div>;
 
     return (
-        <div className="bg-white p-5 rounded shadow">
-            <h2 className="font-semibold mb-3">Manage Hostels</h2>
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+            <h2 className="font-semibold mb-4 text-lg">Manage Hostels</h2>
 
-            <div className="grid grid-cols-1 gap-4 mb-4">
-                <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 gap-4 mb-6">
+                <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
                     <input
                         name="name"
                         placeholder="Hostel name"
-                        className="border p-2"
+                        className="border border-gray-200 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
                         value={form.name}
                         onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                         required
@@ -98,7 +98,7 @@ const AdminHostels = () => {
                         name="gender"
                         value={form.gender}
                         onChange={(e) => setForm((f) => ({ ...f, gender: e.target.value }))}
-                        className="border p-2"
+                        className="border border-gray-200 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
                     >
                         <option>Male</option>
                         <option>Female</option>
@@ -107,16 +107,26 @@ const AdminHostels = () => {
                         name="totalRooms"
                         type="number"
                         min={0}
-                        className="border p-2"
+                        className="border border-gray-200 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
                         value={form.totalRooms}
                         onChange={(e) => setForm((f) => ({ ...f, totalRooms: Number(e.target.value) }))}
                     />
-                    <div className="md:col-span-3">
-                        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+                    <input
+                        name="feeAmount"
+                        type="number"
+                        step="0.01"
+                        min={0}
+                        placeholder="Fee amount (per semester)"
+                        className="border border-gray-200 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                        value={form.feeAmount}
+                        onChange={(e) => setForm((f) => ({ ...f, feeAmount: e.target.value }))}
+                    />
+                    <div>
+                        <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow">
                             {editing ? "Update Hostel" : "Create Hostel"}
                         </button>
                         {editing && (
-                            <button type="button" onClick={resetForm} className="ml-2 px-4 py-2 border rounded">
+                            <button type="button" onClick={resetForm} className="ml-3 px-4 py-2 border border-gray-200 rounded-md cursor-pointer">
                                 Cancel
                             </button>
                         )}
@@ -124,25 +134,27 @@ const AdminHostels = () => {
                 </form>
             </div>
 
-            <div className="max-h-72 overflow-y-auto">
-                <table className="w-full text-sm">
-                    <thead>
-                        <tr className="text-left text-gray-500">
-                            <th>Name</th>
-                            <th>Gender</th>
-                            <th>Total Rooms</th>
-                            <th>Actions</th>
+            <div className="max-h-72 overflow-y-auto rounded-md">
+                <table className="w-full text-sm divide-y divide-gray-100">
+                    <thead className="bg-gray-50">
+                        <tr className="text-left text-xs text-gray-500 uppercase tracking-wider">
+                            <th className="px-4 py-3">Name</th>
+                            <th className="px-4 py-3">Gender</th>
+                            <th className="px-4 py-3">Total Rooms</th>
+                            <th className="px-4 py-3">Fee (per sem)</th>
+                            <th className="px-4 py-3">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white">
                         {hostels.map((h) => (
-                            <tr key={h.id} className="border-t">
-                                <td className="py-2">{h.name}</td>
-                                <td>{h.gender}</td>
-                                <td>{h.totalRooms ?? "-"}</td>
-                                <td>
-                                    <button onClick={() => startEdit(h)} className="text-blue-600 mr-3">Edit</button>
-                                    <button onClick={() => handleDelete(h.id)} className="text-red-600">Delete</button>
+                            <tr key={h.id} className="hover:bg-gray-50">
+                                <td className="px-4 py-3">{h.name}</td>
+                                <td className="px-4 py-3">{h.gender}</td>
+                                <td className="px-4 py-3">{h.totalRooms ?? "-"}</td>
+                                <td className="px-4 py-3">{h.feeAmount ?? "-"}</td>
+                                <td className="px-4 py-3">
+                                    <button onClick={() => startEdit(h)} className="text-indigo-600 mr-3 font-medium cursor-pointer">Edit</button>
+                                    <button onClick={() => handleDelete(h.id)} className="text-red-600 font-medium cursor-pointer">Delete</button>
                                 </td>
                             </tr>
                         ))}

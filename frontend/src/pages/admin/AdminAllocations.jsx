@@ -49,35 +49,41 @@ const AdminAllocations = () => {
     if (loading) return <div className="p-4">Loading allocations...</div>;
 
     return (
-        <div className="bg-white p-5 rounded shadow">
-            <h2 className="font-semibold mb-3">Room Allocations</h2>
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+            <h2 className="font-semibold mb-4 text-lg">Room Allocations</h2>
 
-            <table className="w-full text-sm">
-                <thead>
-                    <tr className="text-left text-gray-500">
-                        <th>Student</th>
-                        <th>Room</th>
-                        <th>Hostel</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {allocations.map((a) => (
-                        <tr key={a.id} className="border-t">
-                            <td>{a.Student?.regNumber}</td>
-                            <td>{a.Room?.roomNumber}</td>
-                            <td>{a.Room?.Hostel?.name}</td>
-                            <td>{a.status}</td>
-                            <td>
-                                {a.status === 'ACTIVE' && (
-                                    <button onClick={() => handleVacate(a)} className="text-red-600">Vacate</button>
-                                )}
-                            </td>
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm divide-y divide-gray-100">
+                    <thead className="bg-gray-50">
+                        <tr className="text-left text-xs text-gray-500 uppercase tracking-wider">
+                            <th className="px-4 py-3">Student</th>
+                            <th className="px-4 py-3">Room</th>
+                            <th className="px-4 py-3">Hostel</th>
+                            <th className="px-4 py-3">Status</th>
+                            <th className="px-4 py-3">Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="bg-white">
+                        {allocations.map((a) => (
+                            <tr key={a.id} className="hover:bg-gray-50">
+                                <td className="px-4 py-3">{a.Student?.regNumber}</td>
+                                <td className="px-4 py-3">{a.Room?.roomNumber}</td>
+                                <td className="px-4 py-3">{a.Room?.Hostel?.name}</td>
+                                <td className="px-4 py-3">
+                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${a.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                        {a.status}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3">
+                                    {a.status === 'ACTIVE' && (
+                                        <button onClick={() => handleVacate(a)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md shadow-sm cursor-pointer">Vacate</button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
             <ConfirmModal
                 isOpen={confirmOpen}

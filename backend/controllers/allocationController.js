@@ -42,16 +42,19 @@ exports.bookRoom = async (req, res) => {
       return res.status(400).json({ message: "Room is full" });
     }
 
+    // Ensure student has a PAID payment for this hostel
+    const hostelId = room.hostelId || (room.Hostel && room.Hostel.id);
     const paidPayment = await Payment.findOne({
       where: {
         studentId: student.id,
         status: "PAID",
+        hostelId: hostelId,
       },
     });
 
     if (!paidPayment) {
       return res.status(403).json({
-        message: "Room booking blocked: payment not confirmed",
+        message: "Room booking blocked: payment for this hostel not confirmed",
       });
     }
 

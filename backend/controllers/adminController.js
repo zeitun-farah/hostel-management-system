@@ -63,11 +63,17 @@ exports.getAllAllocations = async (req, res) => {
  */
 exports.createHostel = async (req, res) => {
   try {
-    const { name, gender } = req.body;
+    const { name, gender, totalRooms, feeAmount } = req.body;
 
-    const hostel = await Hostel.create({ name, gender });
+    const hostel = await Hostel.create({
+      name,
+      gender,
+      totalRooms: totalRooms || 0,
+      feeAmount: feeAmount || 0.0,
+    });
     res.status(201).json(hostel);
   } catch (error) {
+    console.error("createHostel error:", error);
     res.status(500).json({ message: "Failed to create hostel" });
   }
 };
@@ -169,18 +175,6 @@ exports.allocateRoomAdmin = async (req, res) => {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    // Ensure student has a PAID payment
-    const paid = await Payment.findOne({
-      where: { studentId, status: "PAID" },
-      transaction: t,
-    });
-    if (!paid) {
-      await t.rollback();
-      return res
-        .status(403)
-        .json({ message: "Student has not paid. Allocation denied." });
-    }
-
     const existingAllocation = await Allocation.findOne({
       where: { studentId, status: "ACTIVE" },
       transaction: t,
@@ -201,6 +195,19 @@ exports.allocateRoomAdmin = async (req, res) => {
     if (!room) {
       await t.rollback();
       return res.status(404).json({ message: "Room not found" });
+    }
+
+    // Ensure student has a PAID payment for this hostel
+    const hostelId = room.hostelId || (room.Hostel && room.Hostel.id);
+    const paid = await Payment.findOne({
+      where: { studentId, status: "PAID", hostelId },
+      transaction: t,
+    });
+    if (!paid) {
+      await t.rollback();
+      return res.status(403).json({
+        message: "Student has not paid for this hostel. Allocation denied.",
+      });
     }
 
     if ((room.occupied || 0) >= (room.capacity || 0)) {

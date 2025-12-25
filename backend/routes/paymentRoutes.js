@@ -20,6 +20,14 @@ router.put(
   paymentController.confirmPayment
 );
 
+/* ADMIN: DELETE PAYMENT */
+router.delete(
+  "/:paymentId",
+  authMiddleware,
+  roleMiddleware("ADMIN"),
+  paymentController.deletePayment
+);
+
 /* STUDENT: INITIATE PAYMENT */
 router.get(
   "/",

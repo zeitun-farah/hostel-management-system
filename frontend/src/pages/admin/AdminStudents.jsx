@@ -71,31 +71,31 @@ const AdminStudents = () => {
     if (loading) return <div className="p-4">Loading students...</div>;
 
     return (
-        <div className="bg-white p-5 rounded shadow">
-            <h2 className="font-semibold mb-3">Students</h2>
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+            <h2 className="font-semibold mb-4 text-lg">Students</h2>
 
-            <div className="max-h-72 overflow-y-auto">
-                <table className="w-full text-sm">
-                    <thead>
-                        <tr className="text-left text-gray-500">
-                            <th>Reg No</th>
-                            <th>Name</th>
-                            <th>Total Paid</th>
-                            <th>Pending</th>
-                            <th>Allocation</th>
-                            <th>Actions</th>
+            <div className="max-h-72 overflow-y-auto rounded-md">
+                <table className="w-full text-sm divide-y divide-gray-100">
+                    <thead className="bg-gray-50">
+                        <tr className="text-left text-xs text-gray-500 uppercase tracking-wider">
+                            <th className="px-4 py-3">Reg No</th>
+                            <th className="px-4 py-3">Name</th>
+                            <th className="px-4 py-3">Total Paid</th>
+                            <th className="px-4 py-3">Pending</th>
+                            <th className="px-4 py-3">Allocation</th>
+                            <th className="px-4 py-3">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white">
                         {students.map((s) => (
-                            <tr key={s.student.id} className="border-t">
-                                <td className="py-2">{s.student.regNumber}</td>
-                                <td>{s.student.firstName} {s.student.lastName}</td>
-                                <td>{s.totalPaid}</td>
-                                <td>{s.totalPending}</td>
-                                <td>{s.allocation ? s.allocation.Room?.roomNumber : 'None'}</td>
-                                <td>
-                                    <button onClick={() => startAllocate(s)} className="text-blue-600">Allocate</button>
+                            <tr key={s.student.id} className="hover:bg-gray-50">
+                                <td className="px-4 py-3">{s.student.regNumber}</td>
+                                <td className="px-4 py-3">{s.student.firstName} {s.student.lastName}</td>
+                                <td className="px-4 py-3">{s.totalPaid}</td>
+                                <td className="px-4 py-3">{s.totalPending}</td>
+                                <td className="px-4 py-3">{s.allocation ? s.allocation.Room?.roomNumber : 'None'}</td>
+                                <td className="px-4 py-3">
+                                    <button onClick={() => startAllocate(s)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md cursor-pointer">Allocate</button>
                                 </td>
                             </tr>
                         ))}
@@ -106,20 +106,20 @@ const AdminStudents = () => {
             {allocatingFor && (
                 <div className="mt-4 border-t pt-4">
                     <h3 className="font-semibold mb-2">Allocate room for {allocatingFor.student.regNumber}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                        <select value={selectedHostel} onChange={(e) => { setSelectedHostel(e.target.value); loadRooms(e.target.value); }} className="border p-2">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <select value={selectedHostel} onChange={(e) => { setSelectedHostel(e.target.value); loadRooms(e.target.value); }} className="border border-gray-200 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200">
                             <option value="">Select hostel</option>
                             {hostels.map(h => <option key={h.id} value={h.id}>{h.name} ({h.gender})</option>)}
                         </select>
 
-                        <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)} className="border p-2">
+                        <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)} className="border border-gray-200 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200">
                             <option value="">Select room</option>
                             {rooms.map(r => <option key={r.id} value={r.id}>Room {r.roomNumber} (cap {r.capacity} — occupied {r.occupied})</option>)}
                         </select>
 
                         <div>
-                            <button onClick={submitAllocate} className="bg-green-600 text-white px-4 py-2 rounded">Allocate</button>
-                            <button onClick={() => setAllocatingFor(null)} className="ml-2 px-4 py-2 border rounded">Cancel</button>
+                            <button onClick={submitAllocate} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">Allocate</button>
+                            <button onClick={() => setAllocatingFor(null)} className="ml-2 px-4 py-2 border border-gray-200 rounded-md">Cancel</button>
                         </div>
                     </div>
                 </div>

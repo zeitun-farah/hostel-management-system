@@ -50,7 +50,7 @@ exports.getStudentDashboard = async (req, res) => {
         gender: allocation.Room.Hostel.gender,
       },
       payment: {
-        status: "PAID", // placeholder (real payment integration later)
+        status: "PAID", // placeholder (real payment integration later on production)
       },
     });
   } catch (error) {

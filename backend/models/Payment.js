@@ -10,6 +10,15 @@ const Payment = sequelize.define("Payment", {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
+  option: {
+    type: DataTypes.ENUM("SEMESTER", "FULL_YEAR"),
+    allowNull: false,
+    defaultValue: "SEMESTER",
+  },
+  hostelId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   status: {
     type: DataTypes.ENUM("PENDING", "PAID"),
     defaultValue: "PENDING",

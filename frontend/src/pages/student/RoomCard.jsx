@@ -12,7 +12,7 @@ const RoomCard = ({ room, onBook }) => {
 
             <button
                 onClick={() => onBook(room.id)}
-                className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 cursor-pointer"
             >
                 Book
             </button>

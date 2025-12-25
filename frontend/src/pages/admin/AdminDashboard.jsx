@@ -17,22 +17,36 @@ const AdminDashboard = () => {
     if (!stats) return <div className="p-6">Loading...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
-            <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+        <div className="min-h-screen bg-gray-100 py-8 px-4">
+            <div className="max-w-5xl mx-auto">
+                <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
-            <AdminStats stats={stats} />
+                <div className="space-y-6">
+                    <section>
+                        <AdminStats stats={stats} />
+                    </section>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                <AdminHostels />
-                <AdminRooms />
+                    <section>
+                        <AdminHostels />
+                    </section>
+
+                    <section>
+                        <AdminRooms />
+                    </section>
+
+                    <section>
+                        <AdminAllocations />
+                    </section>
+
+                    <section>
+                        <AdminStudents />
+                    </section>
+
+                    <section>
+                        <AdminPayments />
+                    </section>
+                </div>
             </div>
-
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <AdminAllocations />
-                <AdminStudents />
-            </div>
-
-            <AdminPayments />
         </div>
     );
 };

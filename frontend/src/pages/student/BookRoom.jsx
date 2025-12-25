@@ -76,7 +76,7 @@ const BookRoom = () => {
                 <>
                     <button
                         onClick={() => setSelectedHostel(null)}
-                        className="mb-4 text-blue-600"
+                        className="mb-4 text-blue-600 cursor-pointer"
                     >
                         ← Back to hostels
                     </button>

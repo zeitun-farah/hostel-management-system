@@ -29,3 +29,5 @@ export const getAdminStudents = () => api.get("/admin/students");
 export const getAdminPayments = () => api.get("/payments");
 export const confirmPayment = (paymentId) =>
   api.put(`/payments/${paymentId}/confirm`);
+export const deletePayment = (paymentId) =>
+  api.delete(`/payments/${paymentId}`);
